@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 
 type BookmarkDoc = {
-  _id?: string;
+  _id?: ObjectId;
   name: string;
   url: string;
   tags: string[];

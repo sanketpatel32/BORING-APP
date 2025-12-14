@@ -3,10 +3,16 @@ import { getDb } from "@/lib/mongodb";
 
 const DOC_ID = "app2-doc";
 
+type DocRecord = {
+  _id: string;
+  html?: string;
+  updatedAt?: Date;
+};
+
 export async function GET() {
   try {
     const db = await getDb();
-    const doc = await db.collection("docs").findOne<{ html?: string }>({ _id: DOC_ID });
+    const doc = await db.collection<DocRecord>("docs").findOne({ _id: DOC_ID });
     return NextResponse.json({ html: doc?.html ?? "" });
   } catch (error) {
     console.error("Failed to load app2 doc", error);
@@ -25,7 +31,7 @@ export async function POST(request: Request) {
 
     const db = await getDb();
     await db
-      .collection("docs")
+      .collection<DocRecord>("docs")
       .updateOne({ _id: DOC_ID }, { $set: { html, updatedAt: new Date() } }, { upsert: true });
 
     return NextResponse.json({ ok: true });

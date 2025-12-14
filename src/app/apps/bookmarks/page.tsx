@@ -59,7 +59,6 @@ export default function BookmarksPage() {
       id: editingId ?? undefined,
       name: name.trim(),
       url: normalizedUrl,
-      url: normalizedUrl,
       tags: selectedTags,
     };
 

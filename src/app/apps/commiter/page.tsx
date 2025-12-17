@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const COMMON_TYPES = [
   { value: "feat", label: "Feature", description: "A new feature" },
@@ -22,12 +23,26 @@ const UNCOMMON_TYPES = [
 
 const ALL_TYPES = [...COMMON_TYPES, ...UNCOMMON_TYPES];
 
+
+
+const LegendItem = ({ item }: { item: typeof COMMON_TYPES[0] }) => (
+  <li className="text-sm">
+    <div className="flex items-center gap-2 mb-1">
+      <span className="font-mono font-bold text-blue-400">{item.value}</span>
+    </div>
+    <p className="text-neutral-500 leading-snug">{item.description}</p>
+  </li>
+);
+
 export default function CommiterPage() {
   const [description, setDescription] = useState("");
   const [selectedType, setSelectedType] = useState("feat");
   const [copied, setCopied] = useState(false);
 
-  const combinedMessage = `git commit -m "${selectedType}:${description}"`;
+
+
+  const escapedDescription = description.replaceAll('\\', '\\\\').replaceAll('"', '\\"');
+  const combinedMessage = `git commit -m "${selectedType}:${escapedDescription}"`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(combinedMessage);
@@ -35,18 +50,18 @@ export default function CommiterPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const LegendItem = ({ item }: { item: typeof COMMON_TYPES[0] }) => (
-    <li className="text-sm">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="font-mono font-bold text-blue-400">{item.value}</span>
-      </div>
-      <p className="text-neutral-500 leading-snug">{item.description}</p>
-    </li>
-  );
+
+
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black px-6 py-12 text-gray-100">
-      <div className="flex w-full class flex-col gap-8 xl:flex-row xl:items-start xl:justify-center">
+    <main className="flex min-h-screen items-center justify-center bg-black px-6 py-12 text-gray-100 relative">
+      <Link
+        href="/"
+        className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-neutral-800/80 bg-neutral-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-200 shadow-lg backdrop-blur transition hover:border-neutral-700 hover:bg-neutral-900 sm:left-8 sm:top-8 z-50"
+      >
+        ← Back
+      </Link>
+      <div className="flex w-full flex-col gap-8 xl:flex-row xl:items-start xl:justify-center">
 
         {/* Left Legend (Common) */}
         <div className="w-full xl:w-64 xl:shrink-0 order-2 xl:order-1">
@@ -96,8 +111,8 @@ export default function CommiterPage() {
                 key={t.value}
                 onClick={() => setSelectedType(t.value)}
                 className={`rounded-xl border px-5 py-2.5 text-sm font-medium transition-all ${selectedType === t.value
-                    ? "border-white bg-white text-black scale-105"
-                    : "border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-600 hover:text-white hover:scale-105"
+                  ? "border-white bg-white text-black scale-105"
+                  : "border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-600 hover:text-white hover:scale-105"
                   }`}
               >
                 {t.value}
@@ -120,10 +135,10 @@ export default function CommiterPage() {
                 {copied ? "Copied!" : "Click to Copy"}
               </div>
               <div className="font-mono text-2xl text-neutral-300 break-words md:text-3xl">
-                <span className="text-neutral-500">git commit -m "</span>
+                <span className="text-neutral-500">git commit -m &quot;</span>
                 <span className="text-blue-500 font-bold">{selectedType}:</span>
-                <span className={!description ? "text-neutral-700" : ""}>{description || "..."}</span>
-                <span className="text-neutral-500">"</span>
+                <span className={!description ? "text-neutral-700" : ""}>{escapedDescription || "..."}</span>
+                <span className="text-neutral-500">&quot;</span>
               </div>
             </motion.div>
           </AnimatePresence>

@@ -7,7 +7,7 @@ const apps: { href: string; title: string }[] = [
   { href: "/apps/boring-clock", title: "BORING CLOCK" },
   { href: "/apps/docs", title: "DOCS" },
   { href: "/apps/bookmarks", title: "BOOKMARKS" },
-  { href: "/apps/app4", title: "APP 4" },
+  { href: "/apps/commiter", title: "COMMITER" },
   { href: "/apps/app5", title: "APP 5" },
 ];
 
